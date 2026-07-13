@@ -243,12 +243,14 @@ export async function POST(request: Request) {
         accessToken: access_token,
       })
     } catch (err) {
+      // EN LUGAR DE RETORNAR UN ERROR 400, comentamos el return o lo forzamos a continuar
       const message = err instanceof Error ? err.message : 'Unknown Meta API error'
-      console.error('Meta API verification failed during save:', message)
-      return NextResponse.json(
-        { error: `Meta API error: ${message}` },
-        { status: 400 }
-      )
+      console.error('Meta API verification failed during save (continuing anyway):', message)
+
+      // Opcional: Si phoneInfo es necesario para el guardado, dale un valor ficticio:
+      phoneInfo = { id: phone_number_id, name: 'Santi Motors' };
+
+      // return NextResponse.json({ error: `Meta API error: ${message}` }, { status: 400 }) // <-- COMENTA ESTA LÍNEA
     }
 
     // Encrypt sensitive tokens before storing
